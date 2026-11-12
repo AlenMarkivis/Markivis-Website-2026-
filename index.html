@@ -355,7 +355,7 @@ a.lg{cursor:pointer}
 .vc-bar{position:relative;height:1px;background:var(--rule);margin-top:clamp(28px,3vw,44px)}
 .vc-bar i{position:absolute;top:-1px;height:3px;left:0;background:var(--ink);width:var(--w,30%);transform:translateX(var(--x,0%));transition:transform .2s linear}
 @media (max-width:900px){ .vc-track{--per:2.15} }
-@media (max-width:700px){ .vc-track{--per:1.12} .vc-head{align-items:flex-start;flex-direction:column} }
+@media (max-width:700px){ .vc-head{align-items:flex-start;flex-direction:column} }
 
 
 
@@ -653,10 +653,105 @@ body.mm-open{overflow:hidden}
   /* footer: long service names wrap inside their column */
   .foot a{width:auto}
 }
+/* services accordion and stack rail exist for phones only */
+.svm,.pz-rail-w,.rp-th{display:none}
+@media (max-width:900px){
+  /* hero: the services heading lands at the foot of the opened window; the list follows straight after */
+  /* hero: the window opens onto a dark screen, and the services list (with its heading) slides up over it */
+  .hero{height:260vh}
+  #services{top:auto!important;bottom:60vh}
+  .blocks{display:none}
+  .headline h1{font-size:clamp(44px,12.6vw,80px);line-height:.95}
+
+  .svm{display:block;position:relative;z-index:5;margin-top:-60vh;background:var(--dark);color:var(--on-dark);padding:clamp(96px,26vw,140px) 0 clamp(56px,14vw,96px)}
+  .svm-h{margin:0 0 28px;font-size:clamp(34px,9.6vw,56px)}
+  .svm-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--dark-rule)}
+  .svm-it{border-bottom:1px solid var(--dark-rule)}
+  .svm-row{appearance:none;border:0;background:none;color:inherit;font:inherit;width:100%;display:flex;align-items:center;gap:14px;padding:16px 0;text-align:left;cursor:pointer}
+  .svm-ic{flex:none;width:48px;height:48px;display:grid;place-items:center;background:var(--c)}
+  .svm-ic svg{width:22px;height:22px}
+  .svm-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .svm-t b{font-weight:400;font-size:21px;letter-spacing:-.035em;line-height:1.1}
+  .svm-t small{font-size:13px;color:var(--dark-mute)}
+  .svm-arw{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);transition:transform .5s var(--out),background .3s,box-shadow .3s}
+  .svm-arw svg{width:14px;height:14px}
+  .svm-it.on .svm-arw{transform:rotate(180deg);background:var(--on-dark);color:var(--ink);box-shadow:none}
+  .svm-pn{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+  .svm-it.on .svm-pn{grid-template-rows:1fr}
+  .svm-pn>div{overflow:hidden;min-height:0}
+  .svm-in{padding:0 0 20px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(-8px);transition:opacity .35s,transform .5s var(--out)}
+  .svm-it.on .svm-in{opacity:1;transform:none;transition-delay:.12s}
+  .svm-in>p{margin:0;font-size:15px;line-height:1.5;color:var(--dark-mute)}
+  .svm-subs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  .svm-subs li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;padding:8px 0}
+  .svm-subs img{width:64px;height:64px;object-fit:cover;display:block}
+  .svm-subs b{display:block;font-weight:500;font-size:16px;letter-spacing:-.02em;line-height:1.2}
+  .svm-subs span{display:block;font-size:13.5px;line-height:1.4;color:var(--dark-mute);margin-top:3px}
+  .svm-in .btn{align-self:flex-start;background:var(--on-dark);color:var(--ink);height:42px}
+
+  /* how we work: the big words come first, then the step's copy and its photo, which simply fades between steps */
+  .ht-pin{gap:18px}
+  .ht-words{order:1;margin-top:0;font-size:min(12vw,9svh)}
+  .ht-side{order:2;margin-top:4px}
+  .ht-ph{max-height:30svh}
+  .ht-desc p{transition:opacity .2s,transform .3s var(--out)}
+  .ht-desc p.on{transition:opacity .45s .18s,transform .6s var(--out) .18s}
+
+  /* stack: the puzzle gives way to a row of cards you can swipe or step through */
+  .pz-vis,.pz-hint,.pzb-steps{display:none!important}
+  .pzb-pin{padding-bottom:clamp(56px,12vw,96px)}
+  .pzb-grid{gap:32px}
+  .pz-rail-w{display:block;margin-inline:calc(-1*var(--g)) calc(-1*var(--gr));min-width:0}
+  .pz-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--g);padding-inline:var(--g) var(--gr);scrollbar-width:none;overscroll-behavior-x:contain}
+  .pz-rail::-webkit-scrollbar{display:none}
+  .pzr{flex:none;width:min(82vw,340px);scroll-snap-align:start;display:flex;flex-direction:column;background:var(--white);box-shadow:inset 0 0 0 1px var(--rule)}
+  .pzr-top{height:120px;background:var(--c);display:grid;place-items:center}
+  .pzr-top img{width:56px;height:56px;border-radius:12px;object-fit:cover;display:block}
+  .pzr-b{flex:1;display:flex;flex-direction:column;gap:10px;padding:18px}
+  .pzr-b b{font-weight:500;font-size:20px;letter-spacing:-.03em;line-height:1.1}
+  .pzr-b em{font-style:normal;font-size:13px;color:var(--mute);margin-top:-6px}
+  .pzr-b p{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink-2);flex:1}
+  .pzr-b a{align-self:flex-start;font-size:14px;color:var(--ink);text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px}
+  .rail-nav{display:flex;gap:8px;padding:18px var(--gr) 0 var(--g)}
+
+  /* testimonials: one card at a time, sized to its words, arrows under the row */
+  .vc-head{margin-bottom:28px}
+  .vc-head .vc-nav{display:none}
+  .vc-track{align-items:flex-start;overflow-y:hidden;transition:height .45s var(--ease)}
+  .vc-card{gap:24px;padding:22px 20px}
+  .vc-q{gap:14px}
+  .vc-pull{font-size:22px}
+  .vc-foot{display:flex;align-items:center;gap:18px;margin-top:22px}
+  .vc-foot .vc-bar{flex:1;margin-top:0}
+  .vc-foot .vc-nav{display:flex}
+
+  /* thought lab: a thumbnail beside each title */
+  .rowp{grid-template-columns:84px minmax(0,1fr);column-gap:16px;row-gap:6px;align-items:start;padding:16px 0}
+  .rp-th{display:block;grid-row:1/3;grid-column:1;width:84px;height:84px;object-fit:cover}
+  .rowp .c1{grid-column:2;grid-row:1}
+  .rowp h3{grid-column:2;grid-row:2;font-size:19px;line-height:1.15}
+  .rowp:hover h3{transform:none}
+
+  /* assessments: three equal tabs, a compact card, a full-width button */
+  .as-head{gap:20px}
+  .as-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;border-bottom:0;margin:0;padding:0;overflow:visible}
+  .as-ind{display:none}
+  .as-tab{padding:10px 6px;font-size:14px;line-height:1.2;white-space:normal;text-align:center;box-shadow:inset 0 0 0 1px var(--rule);color:var(--ink-2);transition:background .3s,color .3s,box-shadow .3s}
+  .as-tab[aria-selected="true"]{background:var(--ink);color:#fff;box-shadow:none}
+  .as-sfx{display:none}
+  .as-panel{gap:18px;padding:18px}
+  .as-art{width:min(100%,300px)}
+  .as-tx{gap:12px}
+  .as-tx>p{font-size:16px}
+  .as-go{width:100%;flex-direction:column;align-items:stretch;gap:10px}
+  .as-go .btn{justify-content:center;white-space:normal;text-align:center;height:auto;min-height:48px;padding-block:12px}
+  .as-go small{text-align:center}
+}
+@media (min-width:601px) and (max-width:900px){ .vc-track{--per:2.1} }
+@media (max-width:600px){ .vc-track{--per:1.08} }
+
 @media (max-width:600px){
   .foot>div:first-child{grid-column:1/-1}
-  .as-tab{font-size:16px}
-  .as-tabs{gap:22px;margin-inline:calc(-1*var(--g));padding-inline:var(--g);scroll-padding-inline:var(--g)}
 }
 @media (prefers-reduced-motion:reduce){
   .ln>span,.rv,.case .im,.case .im img,.loader,.btn::before{transition-duration:.01s!important}
@@ -720,6 +815,8 @@ body.mm-open{overflow:hidden}
 </section>
 
 
+<!-- Services on phones: one row per service; the arrow opens its sub-services -->
+<section class="svm" id="svm" aria-labelledby="svmH"><div class="wrap"><h2 class="h-l svm-h" id="svmH">We make the first impression. Then we make it last.</h2><ul class="svm-list" id="svmList"></ul></div></section>
 <!-- 3. Metrics --><section class="sec white" id="about">
   <div class="wrap">
     <div class="grid head rv">
@@ -780,6 +877,7 @@ body.mm-open{overflow:hidden}
         <div class="pzb-steps" id="pzbSteps" aria-hidden="true"></div>
         <p class="pz-hint" id="pzHint">Hover a piece to lift it out.</p>
       </div>
+      <div class="pz-rail-w"><div class="pz-rail" id="pzRail" role="list" aria-label="Our stack"></div><div class="rail-nav"><button type="button" class="vc-arw" id="pzrP" aria-label="Previous tool"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 4.5 6.5 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="vc-arw" id="pzrN" aria-label="Next tool"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4.5 13.5 10 8 15.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
       <div class="pz-vis" id="pzB" role="group" aria-label="Our stack as a five-piece puzzle: HubSpot, SuperAGI, EazyBe, Instantly and Sociable"></div>
     </div>
   </div>
@@ -794,7 +892,7 @@ body.mm-open{overflow:hidden}
     </div>
   </div>
   <div class="vc-track" id="vcTrack" tabindex="0" aria-label="Testimonials"></div>
-  <div class="wrap"><div class="vc-bar" aria-hidden="true"><i id="vcFill"></i></div></div>
+  <div class="wrap vc-foot" id="vcFoot"><div class="vc-bar" aria-hidden="true"><i id="vcFill"></i></div></div>
 </section>
 
 <!-- 7. Book: a dark stage; the title runs huge and faint behind a floating book -->
@@ -823,10 +921,10 @@ body.mm-open{overflow:hidden}
       <div class="r"><a class="btn ghost" href="#thoughts">All articles</a></div>
     </div>
     <div class="rv">
-      <a class="rowp" href="#thoughts" data-i="0"><span class="c1">Branding, 6 min</span><h3>Why B2B messaging fails without a strong branding strategy</h3><span class="c3">Read</span></a>
-      <a class="rowp" href="#thoughts" data-i="1"><span class="c1">ABM, 6 min</span><h3>What ABM really looks like when sales and marketing agree</h3><span class="c3">Read</span></a>
-      <a class="rowp" href="#thoughts" data-i="2"><span class="c1">MarTech, 6 min</span><h3>HubSpot workflows that actually save your team time</h3><span class="c3">Read</span></a>
-      <a class="rowp" href="#thoughts" data-i="3"><span class="c1">AI, 6 min</span><h3>AI in B2B content: where it helps and where it hurts</h3><span class="c3">Read</span></a>
+      <a class="rowp" href="#thoughts" data-i="0"><img class="rp-th" src="img/svc/branding.webp" alt="" loading="lazy" draggable="false"><span class="c1">Branding, 6 min</span><h3>Why B2B messaging fails without a strong branding strategy</h3><span class="c3">Read</span></a>
+      <a class="rowp" href="#thoughts" data-i="1"><img class="rp-th" src="img/svc/abm.webp" alt="" loading="lazy" draggable="false"><span class="c1">ABM, 6 min</span><h3>What ABM really looks like when sales and marketing agree</h3><span class="c3">Read</span></a>
+      <a class="rowp" href="#thoughts" data-i="2"><img class="rp-th" src="img/svc/hubspot.webp" alt="" loading="lazy" draggable="false"><span class="c1">MarTech, 6 min</span><h3>HubSpot workflows that actually save your team time</h3><span class="c3">Read</span></a>
+      <a class="rowp" href="#thoughts" data-i="3"><img class="rp-th" src="img/svc/aeo-geo.webp" alt="" loading="lazy" draggable="false"><span class="c1">AI, 6 min</span><h3>AI in B2B content: where it helps and where it hurts</h3><span class="c3">Read</span></a>
     </div>
   </div>
 </section>
@@ -1035,6 +1133,7 @@ function measureHero(){
 /* Dot field: a fine grid that ripples away from the cursor and is carried along by its motion */
 const dc = $('#dots'), dctx = dc.getContext('2d');
 let dots = null, DPR = 1, SP = 22;
+const wand = {px:-9999, py:-9999, vx:0, vy:0};
 function initDots(){
   DPR = Math.min(devicePixelRatio || 1, 2);
   dc.width = Math.round(HW*DPR); dc.height = Math.round(HH*DPR);
@@ -1048,10 +1147,19 @@ function stepDots(dt, t, alpha){
   if (!dots || alpha <= .01) return;
   const R = HW < 700 ? 110 : 150, R2 = R*R;
   const pr = hpin.getBoundingClientRect();
-  const mx = mouse.x - pr.left, my = mouse.y - pr.top;
   const k = 1 - Math.pow(.004, dt);
-  mouse.vx += ((mouse.x - mouse.px) - mouse.vx)*k; mouse.vy += ((mouse.y - mouse.py) - mouse.vy)*k;
-  mouse.px = mouse.x; mouse.py = mouse.y;
+  let mx, my;
+  if (fine){
+    mx = mouse.x - pr.left; my = mouse.y - pr.top;
+    mouse.vx += ((mouse.x - mouse.px) - mouse.vx)*k; mouse.vy += ((mouse.y - mouse.py) - mouse.vy)*k;
+    mouse.px = mouse.x; mouse.py = mouse.y;
+  } else {
+    // two slow, unrelated sine paths make a drift that never quite repeats
+    mx = HW*(.5 + .38*Math.sin(t*.37) + .08*Math.sin(t*1.13 + 2)); my = HH*(.5 + .36*Math.sin(t*.29 + 1.4) + .07*Math.cos(t*.91));
+    if (wand.px < -999){ wand.px = mx; wand.py = my; }
+    wand.vx += ((mx - wand.px) - wand.vx)*k; wand.vy += ((my - wand.py) - wand.vy)*k; wand.px = mx; wand.py = my;
+    mouse.vx = wand.vx*1.6; mouse.vy = wand.vy*1.6;
+  }
   const sp = Math.min(Math.hypot(mouse.vx, mouse.vy), 60);
   const push = reduced ? 0 : 2.6, carry = reduced ? 0 : .5;
   const spring = 1 - Math.pow(.02, dt);
@@ -1339,6 +1447,8 @@ function vcSync(){
   const w = clamp(vcTrack.clientWidth / vcTrack.scrollWidth, .08, 1);
   vcFill.style.setProperty('--w', (w*100).toFixed(2) + '%');
   vcFill.style.setProperty('--x', (max > 0 ? x/max*(1/w - 1)*100 : 0).toFixed(2) + '%');
+  // on phones the row is only as tall as the card in view, so a short quote leaves no gap above the arrows
+  if (innerWidth <= 600){ const k = clamp(Math.round(x / vcStep()), 0, vcCards.length - 1); vcTrack.style.height = vcCards[k].offsetHeight + 'px'; } else vcTrack.style.height = '';
 }
 vcTrack.addEventListener('scroll', vcSync, {passive:true}); addEventListener('resize', vcSync); vcSync();
 // with a mouse, the row can also be dragged
@@ -1372,7 +1482,7 @@ function typeFrame(dt){
   if (ht.hidden) return;
   const r = ht.getBoundingClientRect();
   if (r.top > innerHeight || r.bottom < 0) return;
-  const N = STEPS.length, p = clamp(-r.top / (ht.offsetHeight - innerHeight), 0, 1);
+  const N = STEPS.length, p = clamp(-r.top / (ht.offsetHeight - innerHeight), 0, 1), htMob = innerWidth <= 900;
   const target = lerp(-.6, N - .8, clamp((p - .02) / .9, 0, 1));
   htU += (target - htU) * (reduced || snap ? 1 : Math.min(1, dt*9));
   htWordEls.forEach(({w, f}, i) => {
@@ -1385,9 +1495,9 @@ function typeFrame(dt){
       : `inset(-.3em calc(${((1 - inn)*100).toFixed(2)}% + ${((1 - inn)*2*PADX - PADX).toFixed(3)}em) -.35em -${PADX}em)`;
     f.style.clipPath = clip; f.style.webkitClipPath = clip;
     // below the paragraph, the same photo rises in with the fill and fades as the word empties
-    const ph = htPhs[i], v = `inset(${((1 - inn)*100).toFixed(1)}% 0 0 0)`;
+    const ph = htPhs[i], v = htMob ? 'none' : `inset(${((1 - inn)*100).toFixed(1)}% 0 0 0)`;
     ph.style.clipPath = v; ph.style.webkitClipPath = v;
-    ph.style.opacity = (1 - out).toFixed(3);
+    ph.style.opacity = (htMob ? smooth(.35, 1, inn)*(1 - smooth(0, .6, out)) : 1 - out).toFixed(3);
     ph.style.transform = `scale(${(1.08 - .08*inn).toFixed(4)})`;
   });
   const k = clamp(Math.round(htU), 0, N - 1);
@@ -1677,7 +1787,7 @@ function asBuild(){
   </svg>`;
 }
 const asTabs = $('#asTabs'), asInd = $('#asInd'), asTx = $('#asTx'), asArtEl = $('#asArt');
-asTabs.insertAdjacentHTML('afterbegin', AS.map((a, i) => `<button class="as-tab" type="button" role="tab" id="asTab${i}" aria-selected="${i === 0}" data-i="${i}">${a.n}</button>`).join(''));
+asTabs.insertAdjacentHTML('afterbegin', AS.map((a, i) => `<button class="as-tab" type="button" role="tab" id="asTab${i}" aria-selected="${i === 0}" data-i="${i}"><span>${a.tab}</span><span class="as-sfx"> Score</span></button>`).join(''));
 const asTabEls = [...asTabs.querySelectorAll('.as-tab')];
 let asOn = -1, asT = 0;
 function asMark(){ const t = asTabEls[asOn]; if (!t) return; asInd.style.setProperty('--x', t.offsetLeft + 'px'); asInd.style.setProperty('--w', t.offsetWidth + 'px'); }
@@ -1736,7 +1846,7 @@ const nav = $('#nav'); let lastY = 0;
 // the island is exactly as wide as its contents: links centred, the wider of logo and button setting both sides
 function navIsland(){ const lg = nav.querySelector('.logo'), lk = nav.querySelector('.links'), bt = nav.querySelector('.btn'); const side = Math.max(lg.offsetWidth * (20/24), bt.offsetWidth); nav.style.setProperty('--iw', Math.ceil(side*2 + lk.offsetWidth + 2*20 + 28) + 'px'); }
 navIsland(); addEventListener('resize', navIsland); addEventListener('load', navIsland);
-const darkEls = [$('#book'), $('.end')];
+const darkEls = [$('#book'), $('.end'), $('#svm')];
 
 /* ===== Book: the book rises as the section arrives; the faint title drifts; the book leans toward the cursor ===== */
 const bk7 = $('#book'), bk7Img = $('#bk7Img'), bk7Word = $('#bk7Word'), bk7Vis = $('#bk7Vis');
@@ -1797,7 +1907,8 @@ function endFrame(dt){
   tgL.style.transform = `translateX(${(-push).toFixed(1)}px)`; tgR.style.transform = `translateX(${push.toFixed(1)}px)`;
   tgL.style.opacity = wo; tgR.style.opacity = wo;
   // then the line of copy and the two buttons
-  const so = ease(smooth(.72, .98, smooth(0, .9, tgU)));
+  // on phones they arrive sooner, so they are there as soon as the headline settles
+  const so = innerWidth <= 900 ? ease(smooth(.42, .72, tgU)) : ease(smooth(.72, .98, smooth(0, .9, tgU)));
   tgSub.style.setProperty('--so', so.toFixed(3)); tgSub.classList.toggle('live', so > .6);
   // while the photo fills the screen, the nav and cursor switch to their light-on-dark style
   const dk = e < .5; tgSec.classList.toggle('dk', dk);
@@ -1862,6 +1973,34 @@ function tick(now){
   snap = false;
 }
 window.__mkSnap = () => { snap = true; tick(performance.now()); };
+/* services on phones: one row per service; its arrow opens the sub-services below it (one open at a time) */
+const svmList = $('#svmList'), ARW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg>';
+svmList.innerHTML = SERVICES.map((sv, i) => `<li class="svm-it"><button class="svm-row" type="button" aria-expanded="false" aria-controls="svmP${i}"><span class="svm-ic" style="--c:${DISC_TONES[i][0]};color:${BK_INK(i)}">${svgIc(sv.ic)}</span><span class="svm-t"><b>${esc(sv.n)}</b><small>${sv.subs.length} services</small></span><span class="svm-arw">${ARW}</span></button>
+  <div class="svm-pn" id="svmP${i}" role="region"><div><div class="svm-in"><p>${sv.d}</p><ul class="svm-subs">${sv.subs.map(([n, d]) => `<li><img src="img/svc/${SUB_IMG[n] || 'content'}.webp" alt="" loading="lazy" draggable="false"><span><b>${esc(n)}</b><span>${d}</span></span></li>`).join('')}</ul><a class="btn" href="#contact">Talk to us about ${esc(sv.n)}</a></div></div></div></li>`).join('');
+const svmIts = [...svmList.children];
+svmIts.forEach(it => it.querySelector('.svm-row').addEventListener('click', () => {
+  const open = !it.classList.contains('on');
+  svmIts.forEach(o => { o.classList.remove('on'); o.querySelector('.svm-row').setAttribute('aria-expanded', 'false'); });
+  if (open){
+    it.classList.add('on'); it.querySelector('.svm-row').setAttribute('aria-expanded', 'true');
+    // keep the opened row in view once the panel has grown
+    setTimeout(() => { const r = it.getBoundingClientRect(); if (r.top < 70 || r.top > innerHeight*.6) scrollTo({top: scrollY + r.top - 80, behavior: reduced ? 'auto' : 'smooth'}); }, 380);
+  }
+}));
+svmList.querySelectorAll('.btn').forEach(b => b.insertAdjacentHTML('beforeend', `<span class="chv">${CHEV}</span>`));
+/* stack on phones: a row of cards, one per tool */
+const pzRail = $('#pzRail');
+pzRail.innerHTML = TOOLS.map(tl => `<article class="pzr" role="listitem" style="--c:${tl.f[0]}"><div class="pzr-top"><img src="img/tools/${tl.k}.png" alt="" draggable="false"></div><div class="pzr-b"><b>${tl.n}</b><em>${tl.tag}</em><p>${tl.d}</p><a href="#contact">Talk to us about ${tl.n}</a></div></article>`).join('');
+const pzrStep = () => { const c = pzRail.children; return c.length > 1 ? c[1].offsetLeft - c[0].offsetLeft : 300; };
+const pzrP = $('#pzrP'), pzrN = $('#pzrN');
+pzrP.addEventListener('click', () => pzRail.scrollBy({left: -pzrStep(), behavior: reduced ? 'auto' : 'smooth'}));
+pzrN.addEventListener('click', () => pzRail.scrollBy({left: pzrStep(), behavior: reduced ? 'auto' : 'smooth'}));
+function pzrSync(){ const max = pzRail.scrollWidth - pzRail.clientWidth; pzrP.disabled = pzRail.scrollLeft <= 2; pzrN.disabled = pzRail.scrollLeft >= max - 2; }
+pzRail.addEventListener('scroll', pzrSync, {passive:true}); pzrSync();
+/* testimonials: on phones the arrows sit under the row, next to the progress bar */
+const vcNav = $('.vc-nav'), vcHead = $('.vc-head'), vcFootEl = $('#vcFoot'), mqPh = matchMedia('(max-width:900px)');
+function vcPlace(){ (mqPh.matches ? vcFootEl : vcHead).appendChild(vcNav); }
+mqPh.addEventListener('change', () => { vcPlace(); pzrSync(); }); vcPlace();
 /* mobile menu: a full-screen sheet; closes on a link, on Escape and when the screen grows past tablet width */
 const mnu = $('#mnu'), mmenu = $('#mmenu');
 function menu(open){
