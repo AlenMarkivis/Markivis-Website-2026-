@@ -658,12 +658,16 @@ body.mm-open{overflow:hidden}
 @media (max-width:900px){
   /* hero: the services heading lands at the foot of the opened window; the list follows straight after */
   /* hero: the window opens onto a dark screen, and the services list (with its heading) slides up over it */
-  .hero{height:260vh}
-  #services{top:auto!important;bottom:60vh}
+  .hero{height:220vh}
+  #services{top:auto!important;bottom:100vh}
+  /* inside the window: a still copy of the list, laid out exactly like the real one, which takes over when the pin ends */
+  .svm.svm-ghost{position:absolute;inset:0;margin:0;z-index:auto;overflow:hidden;pointer-events:none}
+  /* the window sits on its own, centred between the two sentences */
+  .headline .win{display:block;width:2.4em;height:.92em;margin:.16em auto .12em}
   .blocks{display:none}
   .headline h1{font-size:clamp(44px,12.6vw,80px);line-height:.95}
 
-  .svm{display:block;position:relative;z-index:5;margin-top:-60vh;background:var(--dark);color:var(--on-dark);padding:clamp(96px,26vw,140px) 0 clamp(56px,14vw,96px)}
+  .svm{display:block;position:relative;z-index:5;margin-top:-100vh;background:var(--dark);color:var(--on-dark);padding:clamp(96px,26vw,140px) 0 clamp(56px,14vw,96px)}
   .svm-h{margin:0 0 28px;font-size:clamp(34px,9.6vw,56px)}
   .svm-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--dark-rule)}
   .svm-it{border-bottom:1px solid var(--dark-rule)}
@@ -682,8 +686,8 @@ body.mm-open{overflow:hidden}
   .svm-in{padding:0 0 20px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(-8px);transition:opacity .35s,transform .5s var(--out)}
   .svm-it.on .svm-in{opacity:1;transform:none;transition-delay:.12s}
   .svm-in>p{margin:0;font-size:15px;line-height:1.5;color:var(--dark-mute)}
-  .svm-subs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
-  .svm-subs li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;padding:8px 0}
+  .svm-subs{list-style:none;margin:4px 0 6px;padding:0;display:flex;flex-direction:column;gap:14px}
+  .svm-subs li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;align-items:center;padding:0}
   .svm-subs img{width:64px;height:64px;object-fit:cover;display:block}
   .svm-subs b{display:block;font-weight:500;font-size:16px;letter-spacing:-.02em;line-height:1.2}
   .svm-subs span{display:block;font-size:13.5px;line-height:1.4;color:var(--dark-mute);margin-top:3px}
@@ -1121,6 +1125,8 @@ addEventListener('resize', () => { if (openIdx >= 0 && !busy) placeZoom(zoomArea
 
 let HW = 1, HH = 1, wr = null, wordSide = [];
 function measureHero(){
+  const winAfter = innerWidth <= 900 ? words[2] : words[0];
+  if (win.previousElementSibling !== winAfter) winAfter.after(' ', win, ' ');
   HW = hpin.clientWidth; HH = hpin.clientHeight;
   words.forEach(w => w.style.transform = '');
   const pr = hpin.getBoundingClientRect(), r = win.getBoundingClientRect();
@@ -1929,8 +1935,10 @@ function tick(now){
   const hr = hero.getBoundingClientRect();
   const pT = clamp(-hr.top/(hero.offsetHeight - innerHeight), 0, 1);
   pH += (pT - pH)*Math.min(1, dt*7); if (snap) pH = pT;
-  const e = ease(smooth(.04,.6,pH));
+  const heroMob = innerWidth <= 900, e = ease(smooth(.04, heroMob ? 1.06 : .6, pH));
   let darkTop = false;
+  // the real services list shows only once the pin has ended, exactly where its copy in the window was
+  if (heroMob) svmEl.style.visibility = hr.bottom - innerHeight > 1 ? 'hidden' : '';
   if (hr.bottom > 0 && wr){
     const x0 = lerp(wr.x, 0, e), y0 = lerp(wr.y, 0, e), x1 = lerp(wr.x + wr.w, HW, e), y1 = lerp(wr.y + wr.h, HH, e);
     const rad = lerp(wr.h/2, 0, smooth(.55,1,e));
@@ -1974,7 +1982,7 @@ function tick(now){
 }
 window.__mkSnap = () => { snap = true; tick(performance.now()); };
 /* services on phones: one row per service; its arrow opens the sub-services below it (one open at a time) */
-const svmList = $('#svmList'), ARW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg>';
+const svmEl = $('#svm'), svmList = $('#svmList'), ARW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg>';
 svmList.innerHTML = SERVICES.map((sv, i) => `<li class="svm-it"><button class="svm-row" type="button" aria-expanded="false" aria-controls="svmP${i}"><span class="svm-ic" style="--c:${DISC_TONES[i][0]};color:${BK_INK(i)}">${svgIc(sv.ic)}</span><span class="svm-t"><b>${esc(sv.n)}</b><small>${sv.subs.length} services</small></span><span class="svm-arw">${ARW}</span></button>
   <div class="svm-pn" id="svmP${i}" role="region"><div><div class="svm-in"><p>${sv.d}</p><ul class="svm-subs">${sv.subs.map(([n, d]) => `<li><img src="img/svc/${SUB_IMG[n] || 'content'}.webp" alt="" loading="lazy" draggable="false"><span><b>${esc(n)}</b><span>${d}</span></span></li>`).join('')}</ul><a class="btn" href="#contact">Talk to us about ${esc(sv.n)}</a></div></div></div></li>`).join('');
 const svmIts = [...svmList.children];
@@ -1988,6 +1996,8 @@ svmIts.forEach(it => it.querySelector('.svm-row').addEventListener('click', () =
   }
 }));
 svmList.querySelectorAll('.btn').forEach(b => b.insertAdjacentHTML('beforeend', `<span class="chv">${CHEV}</span>`));
+const svmGhost = document.createElement('div'); svmGhost.className = 'svm svm-ghost'; svmGhost.setAttribute('aria-hidden', 'true'); svmGhost.inert = true;
+svmGhost.innerHTML = svmEl.innerHTML; svmGhost.querySelectorAll('[id]').forEach(n => n.removeAttribute('id')); reel.appendChild(svmGhost);
 /* stack on phones: a row of cards, one per tool */
 const pzRail = $('#pzRail');
 pzRail.innerHTML = TOOLS.map(tl => `<article class="pzr" role="listitem" style="--c:${tl.f[0]}"><div class="pzr-top"><img src="img/tools/${tl.k}.png" alt="" draggable="false"></div><div class="pzr-b"><b>${tl.n}</b><em>${tl.tag}</em><p>${tl.d}</p><a href="#contact">Talk to us about ${tl.n}</a></div></article>`).join('');
