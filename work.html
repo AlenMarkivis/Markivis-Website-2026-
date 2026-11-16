@@ -18,6 +18,9 @@
   --bg:#EEEEF0; --paper:#F7F7F8; --white:#FFFFFF; --ink:#16121F; --ink-2:#4A4558; --mute:#8C8899; --rule:rgba(22,18,31,.12);
   --purple:#770FFF; --orange:#F36F21;
   --dark:#16121F; --on-dark:#EDEDEF; --dark-mute:#9590AD; --dark-rule:rgba(237,237,239,.12);
+  /* accent palette: light face / deep side. One definition per page; scripts read these with mkTok() */
+  --lavender:#C6B5FB; --lavender-deep:#9F89EA; --peach:#F8C3A1; --peach-deep:#E29C70; --lime:#D6E08E; --lime-deep:#B3C15A; --lilac:#CBC6DE; --lilac-deep:#A49DC0;
+  --purple-deep:#5108C6; --orange-deep:#C9551A; --deep:#2E2740; --mid:#3B3452; --mid-deep:#2A2340; --mist:#E9E2FF; --stone:#D9D6E2;
   --f:"Geist","Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.65,0,.15,1); --out:cubic-bezier(.16,1,.3,1);
   --g:max(clamp(16px,2.6vw,40px), env(safe-area-inset-left,0px));
@@ -275,6 +278,7 @@ body.cc-on .ccur.off{opacity:0}
   .head .t,.head .r{grid-column:1/13}
   .head .r{justify-self:start;align-items:flex-start;text-align:left}
   .stat{grid-column:span 6;border-right:0;padding-left:0!important;border-bottom:1px solid var(--rule);min-height:200px;gap:36px}
+  .stat .v{font-size:clamp(44px,13vw,56px)} /* long values such as 15,000+ stay inside a half-width column */
   .stat:nth-child(odd){border-right:1px solid var(--rule)}
   .stat:nth-child(even){padding-left:16px!important}
   .stat:nth-last-child(-n+2){border-bottom:0}
@@ -499,7 +503,7 @@ body.cc-on .ccur.off{opacity:0}
   .wrows{overflow-x:auto}
   .stp::after{transition:none;transform:none}
 }
-@media (max-width:1100px) and (min-width:901px){
+@media (min-width:901px) and (max-width:1200px){
   .cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 /* ===== Responsive refinements (v0.2) ===== */
@@ -607,7 +611,7 @@ body.cc-on .ccur.off{opacity:0}
       <span class="brand"><b>Clutch</b>Verified reviews</span>
       <span class="score"><b>4.7</b><span class="stars" id="stAll"></span></span>
       <span class="small">Written by our clients and verified by Clutch. 4.8 for willingness to refer us.</span>
-      <a class="chk" href="https://clutch.co/profile/markivis" target="_blank" rel="noopener">See Clutch reviews <i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></i></a>
+      <a class="chk" href="https://clutch.co/profile/markivis" target="_blank" rel="noopener">See Clutch reviews <i><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></i></a>
     </div>
     <div class="qs3" id="qs3"></div>
   </div>
@@ -687,6 +691,8 @@ body.cc-on .ccur.off{opacity:0}
 </footer>
 </main>
 <script>
+// design tokens: scripts take colours from the :root custom properties, so each value is defined once
+function mkTok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
@@ -697,9 +703,9 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(pointer: fine)').matches;
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const IMG = 'img/';
-const ARR = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg>';
-const ARR_R = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>';
-const PLUS = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 1.5v9M1.5 6h9"/></svg>';
+const ARR = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg>';
+const ARR_R = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>';
+const PLUS = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 1.5v9M1.5 6h9"/></svg>';
 const MK = 'https://www.markivis.com';
 const mouse = {x:-9999, y:-9999};
 addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, {passive:true});
@@ -975,7 +981,7 @@ addEventListener('keydown', e => {
 });
 
 /* ===== Process ===== */
-const TICK = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6h7M6.5 3l3 3-3 3"/></svg>';
+const TICK = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6h7M6.5 3l3 3-3 3"/></svg>';
 /* the process illustration: four isometric islands climb left to right, one per step, drawn the way home's stack puzzle is
    (same projection, pale board colours, piece palette). Units run along x (right, down) and y (left, down); z is height in pixels.
    01 a dart hits the target · 02 a route is drawn across a map to a pin · 03 a laptop fills with work and pieces drop beside it
@@ -1000,8 +1006,8 @@ const iline = (a, b, stroke, w, cls = '', d = 0, extra = '') => { const [x1, y1]
 const ipanel = (x0, x1, y, z0, z1, fill, cls = '', d = 0) => `<g${cls ? ` class="${cls}"` : ''}${d ? ` style="--d:${d}s"` : ''}>${ipoly([[x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1]], fill)}</g>`;
 /* the composition follows one system: four equal islands, evenly spaced, climbing in equal steps. Each carries one hero object,
    centred on the same inset pad and drawn at a similar scale. */
-const IPAL = {deep:['#2E2740','#16121F','#221C30'], lil:['#C6B5FB','#9F89EA','#B3A0F4'], grey:['#CBC6DE','#A49DC0','#B8B2CF'], org:['#F7955A','#C9551A','#E0661F'],
-  island:['#F8F7FB','#D9D6E2','#E5E2EC'], map:['#E9E2FF','#C6B5FB','#D7CCFD'], plate:['#ECEAF2','#CFCBDD','#DCD8E7']};
+const IPAL = {deep:[mkTok('--deep'),mkTok('--ink'),'#221C30'], lil:[mkTok('--lavender'),mkTok('--lavender-deep'),'#B3A0F4'], grey:[mkTok('--lilac'),mkTok('--lilac-deep'),'#B8B2CF'], org:[mkTok('--orange'),mkTok('--orange-deep'),'#E0661F'],
+  island:['#F8F7FB',mkTok('--stone'),'#E5E2EC'], map:[mkTok('--mist'),mkTok('--lavender'),'#D7CCFD'], plate:['#ECEAF2','#CFCBDD','#DCD8E7']};
 const IW = 2.4, ITH = 18, ISTEP = 2.8;
 const ISL = [0, 1, 2, 3].map(k => ({x:ISTEP*k, y:ISTEP*3 - ISTEP*k, h:30 + 55*k}));
 // where the token rests: hovering over the middle of each island, above its hero object, so the arcs run clear of the drawing

@@ -18,6 +18,9 @@
   --bg:#EEEEF0; --paper:#F7F7F8; --white:#FFFFFF; --ink:#16121F; --ink-2:#4A4558; --mute:#8C8899; --rule:rgba(22,18,31,.12);
   --purple:#770FFF; --orange:#F36F21;
   --dark:#16121F; --on-dark:#EDEDEF; --dark-mute:#9590AD; --dark-rule:rgba(237,237,239,.12);
+  /* accent palette: light face / deep side. One definition per page; scripts read these with mkTok() */
+  --lavender:#C6B5FB; --lavender-deep:#9F89EA; --peach:#F8C3A1; --peach-deep:#E29C70; --lime:#D6E08E; --lime-deep:#B3C15A; --lilac:#CBC6DE; --lilac-deep:#A49DC0;
+  --purple-deep:#5108C6; --orange-deep:#C9551A; --deep:#2E2740; --mid:#3B3452; --mid-deep:#2A2340; --mist:#E9E2FF; --stone:#D9D6E2;
   --f:"Geist","Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.65,0,.15,1); --out:cubic-bezier(.16,1,.3,1);
   --g:max(clamp(16px,2.6vw,40px), env(safe-area-inset-left,0px));
@@ -439,6 +442,7 @@ body.cc-on .ccur.off{opacity:0}
   .head .t,.head .r{grid-column:1/13}
   .head .r{justify-self:start;align-items:flex-start;text-align:left}
   .stat{grid-column:span 6;border-right:0;padding-left:0!important;border-bottom:1px solid var(--rule);min-height:200px;gap:36px}
+  .stat .v{font-size:clamp(44px,13vw,56px)} /* long values such as 15,000+ stay inside a half-width column */
   .stat:nth-child(odd){border-right:1px solid var(--rule)}
   .stat:nth-child(even){padding-left:16px!important}
   .stat:nth-last-child(-n+2){border-bottom:0}
@@ -578,8 +582,8 @@ body.cc-on .ccur.off{opacity:0}
   <div class="strip rv">
     <p>Not sure where to start? <span>Two free checks.</span></p>
     <div class="chks">
-      <a class="chk" href="https://www.markivis.com/digital-marketing" target="_blank" rel="noopener">Digital Maturity Survey <small>2 min</small><i><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></i></a>
-      <a class="chk" href="https://beam.markivis.com/" target="_blank" rel="noopener">AEO &amp; SEO audit <small>free</small><i><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></i></a>
+      <a class="chk" href="https://www.markivis.com/digital-marketing" target="_blank" rel="noopener">Digital Maturity Survey <small>2 min</small><i><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></i></a>
+      <a class="chk" href="https://beam.markivis.com/" target="_blank" rel="noopener">AEO &amp; SEO audit <small>free</small><i><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg></i></a>
     </div>
   </div>
 </section>
@@ -636,6 +640,8 @@ body.cc-on .ccur.off{opacity:0}
 
 <script type="application/ld+json" id="faqLd"></script>
 <script>
+// design tokens: scripts take colours from the :root custom properties, so each value is defined once
+function mkTok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
@@ -646,9 +652,9 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(pointer: fine)').matches;
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const IMG = 'img/';
-const ARR = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg>';
-const ARR_R = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>';
-const PLUS = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 1.5v9M1.5 6h9"/></svg>';
+const ARR = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg>';
+const ARR_R = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M7.5 3l4 4-4 4"/></svg>';
+const PLUS = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 1.5v9M1.5 6h9"/></svg>';
 const MK = 'https://www.markivis.com';
 
 /* ===== Data ===== */
@@ -861,9 +867,9 @@ const VIEW = [64, 34, 1412, 450];
 const C30 = Math.cos(Math.PI / 6), S30 = .5;
 // [top, side], as on home's stack
 const CL = {
-  board:['#FFFFFF', '#D9D6E2'], path:['#FFFFFF', '#D9D6E2'], desk:['#E9E2FF', '#C6B5FB'], deep:['#2E2740', '#16121F'], mid:['#3B3452', '#2A2340'],
-  purple:['#770FFF', '#5108C6'], lav:['#C6B5FB', '#9F89EA'], lime:['#D6E08E', '#B3C15A'], peach:['#F8C3A1', '#E29C70'],
-  lilac:['#CBC6DE', '#A49DC0'], white:['#FFFFFF', '#D9D6E2'],
+  board:[mkTok('--white'), mkTok('--stone')], path:[mkTok('--white'), mkTok('--stone')], desk:[mkTok('--mist'), mkTok('--lavender')], deep:[mkTok('--deep'), mkTok('--ink')], mid:[mkTok('--mid'), mkTok('--mid-deep')],
+  purple:[mkTok('--purple'), mkTok('--purple-deep')], lav:[mkTok('--lavender'), mkTok('--lavender-deep')], lime:[mkTok('--lime'), mkTok('--lime-deep')], peach:[mkTok('--peach'), mkTok('--peach-deep')],
+  lilac:[mkTok('--lilac'), mkTok('--lilac-deep')], white:[mkTok('--white'), mkTok('--stone')],
 };
 const O = '#F36F21', INK = '#16121F';
 // the world: x runs down-right, y runs down-left, z is up
