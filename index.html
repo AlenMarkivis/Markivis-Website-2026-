@@ -1,6 +1,10 @@
-<title>Markivis Homepage v0.25 responsive</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Markivis Home v0.25</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Markivis is a B2B marketing agency for companies that sell complex things: digital marketing, marketing automation, ABM, marketing communication, UI/UX design and employer branding.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&display=swap">
@@ -81,11 +85,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--purple);outline-off
 .nav.inv .logo .mk-l{display:block}
 .links{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2px;list-style:none;margin:0;padding:4px;border-radius:999px;background:rgba(255,255,255,.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .4s}
 .links a{display:block;white-space:nowrap;padding:8px 14px;border-radius:999px;text-decoration:none;font-size:14px;color:var(--ink-2);transition:background .3s,color .3s}
-.links a:hover{background:#fff;color:var(--ink)}
+.links a:hover,.links a[aria-current]{background:#fff;color:var(--ink)}
 .nav.inv{color:var(--on-dark)}
 .nav.inv .links{background:rgba(255,255,255,.08)}
 .nav.inv .links a{color:var(--dark-mute)}
-.nav.inv .links a:hover{background:rgba(255,255,255,.12);color:var(--on-dark)}
+.nav.inv .links a:hover,.nav.inv .links a[aria-current]{background:rgba(255,255,255,.12);color:var(--on-dark)}
 .nav.inv .btn{background:var(--on-dark);color:var(--ink)}
 .nav.inv .btn:hover{color:#fff}
 
@@ -451,7 +455,7 @@ a.lg{cursor:pointer}
 /* each card carries its own button; it fills when the card is hovered */
 .cy-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px 16px;border-top:1px solid var(--rule);padding-top:18px}
 .cy-foot .m{border-top:0;padding-top:0}
-.cy-cta{flex:none;margin-left:auto}
+.cy-cta{flex:none;margin-left:auto;height:40px;padding:0 16px}
 .cy-card:hover .cy-cta{color:#fff}
 .cy-card:hover .cy-cta::before{transform:none}
 
@@ -558,7 +562,7 @@ body.cc-on .ccur.off{opacity:0}
 .ccur.swap .cc-lbl{opacity:0;transform:translateY(4px)}
 @media (pointer:fine){ body.cc-on,body.cc-on *{cursor:none!important} body.cc-on textarea,body.cc-on input{cursor:text!important} }
 @keyframes chup{0%{transform:translateY(3px);opacity:.3}45%{transform:translateY(0);opacity:1}100%{transform:translateY(-4px);opacity:0}}
-.btn{transition:transform .45s var(--out)}
+.btn{transition:transform .45s var(--out),color .3s}
 .btn:hover{transform:translateY(-2px)}
 .btn .chv{display:inline-grid;place-items:center;width:0;overflow:hidden;margin-left:-10px;transition:width .4s var(--out),margin .4s var(--out)}
 .btn .chv svg{width:13px;height:13px;flex:none}
@@ -576,7 +580,8 @@ body.cc-on .ccur.off{opacity:0}
   .stat{grid-column:span 6;border-right:0;padding-left:0!important;border-bottom:1px solid var(--rule)}
   .case{grid-column:span 12;margin-top:0!important}
   .rowp .c1{grid-column:1/13}.rowp h3{grid-column:1/12}.rowp .c3{display:none}
-  .foot>div{grid-column:span 6}
+  .foot>div{grid-column:span 6;min-width:0}
+  .foot a{width:auto;line-height:1.3;padding-block:2px} /* long service names wrap inside their column */
 }
 
 /* ===== Responsive (v0.25r): phones and tablets ===== */
@@ -590,7 +595,7 @@ body.cc-on .ccur.off{opacity:0}
 .mm-links a{display:block;padding:14px 0;font-size:clamp(30px,8.6vw,44px);letter-spacing:-.045em;line-height:1.05;text-decoration:none;color:inherit;transform:translateY(105%);transition:transform .6s var(--out),color .3s}
 .mmenu.on .mm-links a{transform:none}
 .mm-links li:nth-child(2) a{transition-delay:.04s}.mm-links li:nth-child(3) a{transition-delay:.08s}.mm-links li:nth-child(4) a{transition-delay:.12s}.mm-links li:nth-child(5) a{transition-delay:.16s}.mm-links li:nth-child(6) a{transition-delay:.2s}
-.mm-links a:active,.mm-links a:hover{color:var(--orange)}
+.mm-links a:active,.mm-links a:hover,.mm-links a[aria-current]{color:var(--orange)}
 .mm-foot{display:flex;flex-direction:column;align-items:flex-start;gap:18px;color:var(--dark-mute);font-size:15px;max-width:34ch}
 .mm-foot .btn{background:var(--on-dark);color:var(--ink)}
 body.mm-open{overflow:hidden}
@@ -644,14 +649,11 @@ body.mm-open{overflow:hidden}
   .cy-card{top:80px;height:min(calc(100svh - 112px),620px)}
   .cy-tx{gap:12px;padding:18px}
   .cy-tx .c{font-size:13px}
-  .cy-tx h3{font-size:clamp(19px,5.2vw,26px)}
+  .cy-tx h3{font-size:clamp(19px,5.2vw,24px)}
   .cy-foot{padding-top:14px;gap:12px}
   .cy-tx .m b{font-size:clamp(34px,10vw,52px)}
   .cy-tx .m span{font-size:13px}
-  .cy-cta{height:40px;padding:0 16px}
 
-  /* footer: long service names wrap inside their column */
-  .foot a{width:auto}
 }
 /* services accordion and stack rail exist for phones only */
 .svm,.pz-rail-w,.rp-th{display:none}
@@ -691,7 +693,7 @@ body.mm-open{overflow:hidden}
   .svm-subs img{width:64px;height:64px;object-fit:cover;display:block}
   .svm-subs b{display:block;font-weight:500;font-size:16px;letter-spacing:-.02em;line-height:1.2}
   .svm-subs span{display:block;font-size:13.5px;line-height:1.4;color:var(--dark-mute);margin-top:3px}
-  .svm-in .btn{align-self:flex-start;background:var(--on-dark);color:var(--ink);height:42px}
+  .svm-in .btn{align-self:flex-start;background:var(--on-dark);color:var(--ink)}
 
   /* how we work: the big words come first, then the step's copy and its photo, which simply fades between steps */
   .ht-pin{gap:18px}
@@ -733,7 +735,7 @@ body.mm-open{overflow:hidden}
   .rowp{grid-template-columns:84px minmax(0,1fr);column-gap:16px;row-gap:6px;align-items:start;padding:16px 0}
   .rp-th{display:block;grid-row:1/3;grid-column:1;width:84px;height:84px;object-fit:cover}
   .rowp .c1{grid-column:2;grid-row:1}
-  .rowp h3{grid-column:2;grid-row:2;font-size:19px;line-height:1.15}
+  .rowp h3{grid-column:2;grid-row:2;font-size:clamp(19px,5.2vw,24px);line-height:1.15}
   .rowp:hover h3{transform:none}
 
   /* assessments: three equal tabs, a compact card, a full-width button */
@@ -748,7 +750,7 @@ body.mm-open{overflow:hidden}
   .as-tx{gap:12px}
   .as-tx>p{font-size:16px}
   .as-go{width:100%;flex-direction:column;align-items:stretch;gap:10px}
-  .as-go .btn{justify-content:center;white-space:normal;text-align:center;height:auto;min-height:48px;padding-block:12px}
+  .as-go .btn{justify-content:center;white-space:normal;text-align:center;height:auto;min-height:46px;padding-block:12px}
   .as-go small{text-align:center}
 }
 @media (min-width:601px) and (max-width:900px){ .vc-track{--per:2.1} }
@@ -762,6 +764,8 @@ body.mm-open{overflow:hidden}
   .lrow,.hint i,.play::before,.ccur svg,.btn .chv svg,.stat .lbl .tk svg{animation:none!important}
 }
 </style>
+</head>
+<body>
 
 <div class="loader wrap" id="loader" aria-hidden="true"><div class="bar"><i id="lbar"></i></div><span class="small">Markivis, B2B marketing</span><span class="n" id="lnum">0</span></div>
 <div class="ccur" id="ccur" aria-hidden="true"><div class="cc-ring"><svg class="cc-a" viewBox="0 0 14 14"><path d="M7 11.5V2.5M3 6.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="cc-x" viewBox="0 0 14 14"><path d="M7 2.5v9M2.5 7h9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div><span class="cc-dot"></span><span class="cc-lbl"></span></div>
@@ -781,13 +785,13 @@ body.mm-open{overflow:hidden}
 
 <header class="nav wrap" id="nav">
   <a class="logo" href="#top" aria-label="Markivis home"><span class="mk mk-d"><img src="img/brand/markivis-dark.png" alt=""></span><span class="mk mk-l"><img src="img/brand/markivis-light.png" alt=""></span></a>
-  <ul class="links"><li><a href="#services">Services</a></li><li><a href="#work">Work</a></li><li><a href="#about">About</a></li><li><a href="#thoughts">Thought lab</a></li><li><a href="#careers">Careers</a></li></ul>
+  <ul class="links"><li><a href="services.html">Services</a></li><li><a href="work.html">Work</a></li><li><a href="https://www.markivis.com/about-us">About</a></li><li><a href="https://www.markivis.com/blog">Thought lab</a></li><li><a href="https://www.markivis.com/career">Careers</a></li></ul>
   <a class="btn" href="#contact">Let’s talk</a>
   <button class="mnu" id="mnu" type="button" aria-expanded="false" aria-controls="mmenu" aria-label="Open menu"><i></i><i></i></button>
 </header>
 <div class="mmenu" id="mmenu" hidden>
   <nav class="mm-in wrap" aria-label="Main">
-    <ul class="mm-links"><li><a href="#services">Services</a></li><li><a href="#work">Work</a></li><li><a href="#about">About</a></li><li><a href="#thoughts">Thought lab</a></li><li><a href="#checks">Assessments</a></li><li><a href="#careers">Careers</a></li></ul>
+    <ul class="mm-links"><li><a href="services.html">Services</a></li><li><a href="work.html">Work</a></li><li><a href="https://www.markivis.com/about-us">About</a></li><li><a href="https://www.markivis.com/blog">Thought lab</a></li><li><a href="https://www.markivis.com/career">Careers</a></li></ul>
     <div class="mm-foot"><a class="btn" href="#contact">Start a conversation</a><span>B2B marketing for companies that sell complex things.</span></div>
   </nav>
 </div>
@@ -857,7 +861,7 @@ body.mm-open{overflow:hidden}
   <div class="wrap">
     <div class="grid head rv">
       <h2 class="t h-l"><span class="ln"><span>See what we do in</span></span><span class="ln"><span>the real world.</span></span></h2>
-      <div class="r"><a class="btn ghost" href="https://www.markivis.com/case-studies/" target="_blank" rel="noopener">Read all case studies</a></div>
+      <div class="r"><a class="btn ghost" href="work.html#cases">Read all case studies</a></div>
     </div>
     <div class="cy-stack">
       <a class="cy-card" href="https://www.markivis.com/case-studies/from-fragmented-to-flourishing-how-birlasoft-built-a-250000-strong-linkedin-community" target="_blank" rel="noopener" data-case style="--i:0"><div class="cy-im"><img src="img/work/birlasoft.webp" alt="" loading="lazy" draggable="false"></div><div class="cy-tx"><span class="c">Birlasoft<em>Employer branding</em></span><h3>From fragmented to flourishing: a LinkedIn community 250,000 strong</h3><span class="cy-foot"><span class="m"><b>250K</b><span>LinkedIn community built</span></span><span class="btn ghost cy-cta">Read case study</span></span></div></a>
@@ -975,7 +979,7 @@ body.mm-open{overflow:hidden}
       <h2 class="h-xl"><span class="w tg-l">Let’s build</span> <span class="tg-win" id="tgWin" aria-hidden="true"></span><br><span class="w tg-r">yours, together.</span></h2>
       <div class="tg-sub" id="tgSub">
         <p>Tell us what you’re selling and who needs to understand it. We’ll come back with a plan.</p>
-        <div class="tg-ctas"><a class="btn" href="#contact" id="tgTalk">Start a conversation</a><a class="btn ghost" href="#checks">Take a free assessment</a></div>
+        <div class="tg-ctas"><a class="btn" href="mailto:hello@markivis.com?subject=Let%E2%80%99s%20talk" id="tgTalk">Start a conversation</a><a class="btn ghost" href="#checks">Take a free assessment</a></div>
       </div>
     </div>
     <div class="tg-photo" id="tgPhoto" aria-hidden="true"><img src="img/end/team.webp" alt="" draggable="false"><i class="tg-wash" id="tgWash"></i></div>
@@ -986,8 +990,8 @@ body.mm-open{overflow:hidden}
 <footer class="end">
   <div class="wrap">
     <div class="grid foot">
-      <div><span class="h">Services</span><a href="#services">Digital Marketing</a><a href="#services">UI/UX Design</a><a href="#services">Employer Branding</a><a href="#services">Marketing Automation</a><a href="#services">Account Based Marketing</a><a href="#services">Marketing Communication</a></div>
-      <div><span class="h">Company</span><a href="#about">About</a><a href="#work">Work</a><a href="#thoughts">Thought lab</a><a href="#careers">Careers</a></div>
+      <div><span class="h">Services</span><a href="https://www.markivis.com/digital-marketing">Digital Marketing</a><a href="https://www.markivis.com/ui-ux">UI/UX Design</a><a href="https://www.markivis.com/employer-branding">Employer Branding</a><a href="https://www.markivis.com/marketing-automation-services">Marketing Automation</a><a href="https://www.markivis.com/abm-lead-gen">Account Based Marketing</a><a href="https://www.markivis.com/marketing-communication">Marketing Communication</a></div>
+      <div><span class="h">Company</span><a href="https://www.markivis.com/about-us">About</a><a href="work.html">Work</a><a href="https://www.markivis.com/blog">Thought lab</a><a href="https://www.markivis.com/career">Careers</a></div>
       <div><span class="h">Social</span><a href="#contact">LinkedIn</a><a href="#contact">Instagram</a><a href="#contact">YouTube</a></div>
       <div><span class="h">Markivis</span><span>A B2B marketing agency for companies that sell complex things.</span></div>
     </div>
@@ -1023,8 +1027,9 @@ const SERVICES = [
    subs:[['Videos','Brand films, explainers and short-form reels that leave a lasting impression.'],['Branding','Strategy, identity and voice for a brand people remember.'],['Creative','Campaign concepts, art direction and design for digital and print.'],['Content','Thought leadership, copy and long-form assets that drive results.']]},
 ];
 const N = SERVICES.length;
-// deeper, richer discs: top face, outer side, inner wall
-const DISC_TONES = [['#9A7BFF','#7C58EE','#5A38C8'],['#FF9A62','#E57A3F','#BC5A25'],['#8F88AE','#726B93','#534D72'],['#D9A55B','#BC873F','#93672A'],['#B5CA2C','#97AB17','#728210'],['#6A12F0','#5108C6','#380494']];
+// deeper, richer discs: top face, outer side, inner wall. Faces use the site palette (same pairs as the tools, services and work illustrations):
+// lavender #9F89EA, peach #E29C70, lilac #A49DC0, brand orange #F36F21, lime #B3C15A, brand purple #770FFF.
+const DISC_TONES = [['#9F89EA','#8069D6','#5F4AB3'],['#E29C70','#C97E52','#A3603A'],['#A49DC0','#857EA3','#645E80'],['#F36F21','#C9551A','#9A3E10'],['#B3C15A','#96A43F','#73802A'],['#770FFF','#5108C6','#380494']];
 
 /* Loader */
 const loader = $('#loader'); let readyFired = false;
@@ -2030,3 +2035,5 @@ setTimeout(measureHero, 60);
 requestAnimationFrame(loop);
 })();
 </script>
+</body>
+</html>
