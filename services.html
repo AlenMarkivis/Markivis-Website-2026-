@@ -103,8 +103,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 .mm-foot .btn{background:var(--on-dark);color:var(--ink)}
 body.mm-open{overflow:hidden}
 
-/* ===== Hero: one strong title and two buttons over a quiet monotone network of fine lines and nodes that drift
-   and ease aside near the cursor. ===== */
+/* ===== Hero: one strong title and two buttons over the same dot field as home, which ripples away from the cursor. ===== */
 .hero{position:relative;height:100vh;height:100svh;min-height:640px;max-height:1080px;overflow:hidden;background:var(--white)}
 .net{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;display:block}
 .hero-in{position:absolute;left:var(--g);right:var(--gr);top:0;bottom:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(28px,4.4vh,48px);pointer-events:none}
@@ -507,7 +506,7 @@ body.cc-on .ccur.off{opacity:0}
 
 <main id="top">
 
-<!-- Hero: one strong title and two buttons over a quiet network of lines and nodes -->
+<!-- Hero: one strong title and two buttons over the dot field (same as home) -->
 <section class="hero" id="hero" aria-labelledby="h1">
   <canvas class="net" id="net" aria-hidden="true"></canvas>
   <div class="hero-in" id="heroIn">
@@ -721,74 +720,78 @@ const FAQ = [
 const mouse = {x:-9999, y:-9999};
 addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, {passive:true});
 
-/* ===== Hero: the title rises in. Behind it, a quiet monotone network: fine lines join nearby nodes, the nodes drift slowly,
-   and near the cursor they ease aside and their lines darken a little. It stays fainter behind the words. ===== */
+/* ===== Hero: the title rises in. Behind it, the same dot field as home: a fine grid that ripples away from the cursor
+   and is carried along by its motion; energised dots grow and turn purple. ===== */
 requestAnimationFrame(() => setTimeout(() => $('#heroIn').classList.add('in'), 80));
-const hero = $('#hero'), net = $('#net'), nctx = net.getContext('2d');
-const NET_D = 270, NET_R = 320, NET_PUSH = 34; // how far a line reaches; how far around the cursor the web shows; how far nodes ease aside
-let NW = 0, NH = 0, ndpr = 1, hmx = -9999, hmy = -9999, hIn = 0, mouseSeen = false, wt = 0;
-const nodes = [];
-function netSize(){
-  const r = hero.getBoundingClientRect(); ndpr = Math.min(2, devicePixelRatio || 1);
-  NW = r.width; NH = r.height; net.width = Math.round(NW * ndpr); net.height = Math.round(NH * ndpr);
-  const want = Math.round(clamp(NW * NH / 30000, 16, 54));
-  while (nodes.length < want){ const a = Math.random() * Math.PI * 2, s = 5 + Math.random() * 8;
-    nodes.push({x: Math.random() * NW, y: Math.random() * NH, vx: Math.cos(a) * s, vy: Math.sin(a) * s, ox: 0, oy: 0, r: Math.random() < .18 ? 2.8 + Math.random() * 1.6 : 1.1 + Math.random() * 1.4}); }
-  nodes.length = want;
-  nodes.forEach(n => { if (n.x > NW) n.x = Math.random() * NW; if (n.y > NH) n.y = Math.random() * NH; });
+const hero = $('#hero'), dc = $('#net'), dctx = dc.getContext('2d');
+let HW = 1, HH = 1, DPR = 1, SP = 22, dots = null, ht = 0;
+const hm = {px:-9999, py:-9999, vx:0, vy:0}, wand = {px:-9999, py:-9999, vx:0, vy:0};
+function initDots(){
+  const r = hero.getBoundingClientRect();
+  HW = r.width; HH = r.height; DPR = Math.min(devicePixelRatio || 1, 2);
+  dc.width = Math.round(HW*DPR); dc.height = Math.round(HH*DPR);
+  SP = HW < 700 ? 20 : 24;
+  const cols = Math.ceil(HW/SP)+1, rows = Math.ceil(HH/SP)+1, n = cols*rows;
+  dots = {n, x:new Float32Array(n), y:new Float32Array(n), ox:new Float32Array(n), oy:new Float32Array(n), vx:new Float32Array(n), vy:new Float32Array(n), e:new Float32Array(n)};
+  const offX = (HW - (cols-1)*SP)/2, offY = (HH - (rows-1)*SP)/2;
+  for (let r=0,k=0;r<rows;r++) for (let c=0;c<cols;c++,k++){ dots.x[k] = offX + c*SP; dots.y[k] = offY + r*SP; }
   heroFrame(0);
 }
-hero.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; mouseSeen = true; const r = hero.getBoundingClientRect(); hmx = e.clientX - r.left; hmy = e.clientY - r.top; });
-hero.addEventListener('pointerleave', () => { hmx = hmy = -9999; });
-const netEase = x => x * x * (3 - 2 * x);
 function heroFrame(dt){
   const hr = hero.getBoundingClientRect();
-  if (hr.bottom < 0 || hr.top > innerHeight || !NW) return;
-  // no mouse yet (or a touch screen): a slow drifting point stands in for the cursor
-  let px = hmx, py = hmy;
-  if (!mouseSeen && !reduced){ wt += dt * .22; px = NW * (.5 + .38 * Math.sin(wt * 1.3)); py = NH * (.5 + .32 * Math.sin(wt * 2.1 + 1)); }
-  const live = px > -999;
-  hIn += ((live ? 1 : 0) - hIn) * Math.min(1, dt * 3);
-  const k = Math.min(1, dt * 5);
-  nodes.forEach(n => {
-    if (!reduced){
-      n.x += n.vx * dt; n.y += n.vy * dt;
-      if (n.x < -30) n.x = NW + 30; else if (n.x > NW + 30) n.x = -30;
-      if (n.y < -30) n.y = NH + 30; else if (n.y > NH + 30) n.y = -30;
-    }
-    const dx = n.x - px, dy = n.y - py, d = live ? Math.hypot(dx, dy) : 1e9;
-    let tx = 0, ty = 0;
-    if (d < NET_R && d > .1){ const f = 1 - d / NET_R; tx = dx / d * f * f * NET_PUSH; ty = dy / d * f * f * NET_PUSH; }
-    n.ox += (tx - n.ox) * k; n.oy += (ty - n.oy) * k;
-    n.px = n.x + n.ox; n.py = n.y + n.oy;
-    // how visible: full near the cursor, gone by the edge of the reveal
-    n.g = d < NET_R ? netEase(1 - d / NET_R) * hIn : 0;
-  });
-  nctx.setTransform(ndpr, 0, 0, ndpr, 0, 0);
-  nctx.clearRect(0, 0, NW, NH);
-  for (let i = 0; i < nodes.length; i++){
-    const a = nodes[i]; if (a.g < .01) continue;
-    for (let j = 0; j < nodes.length; j++){
-      if (j === i) continue;
-      const b = nodes[j]; if (b.g > a.g || (b.g === a.g && j < i)) continue; // each pair once, drawn from its brighter end
-      const dx = a.px - b.px, dy = a.py - b.py;
-      if (dx > NET_D || dx < -NET_D || dy > NET_D || dy < -NET_D) continue;
-      const d = Math.hypot(dx, dy); if (d > NET_D) continue;
-      const f = 1 - d / NET_D, g = (a.g + b.g) / 2;
-      nctx.lineWidth = .6 + (a.r + b.r) * .16;
-      // ink further out, purple close in
-      nctx.strokeStyle = `rgba(22,18,31,${(f * g * .3).toFixed(3)})`; nctx.beginPath(); nctx.moveTo(a.px, a.py); nctx.lineTo(b.px, b.py); nctx.stroke();
-      nctx.strokeStyle = `rgba(119,15,255,${(f * g * g * .9).toFixed(3)})`; nctx.beginPath(); nctx.moveTo(a.px, a.py); nctx.lineTo(b.px, b.py); nctx.stroke();
-    }
+  if (!dots || hr.bottom < 0 || hr.top > innerHeight) return;
+  ht += dt; const t = ht;
+  const R = HW < 700 ? 110 : 150, R2 = R*R;
+  const k = 1 - Math.pow(.004, dt);
+  let mx, my;
+  if (fine){
+    mx = mouse.x - hr.left; my = mouse.y - hr.top;
+    if (hm.px < -999){ hm.px = mouse.x; hm.py = mouse.y; }
+    hm.vx += ((mouse.x - hm.px) - hm.vx)*k; hm.vy += ((mouse.y - hm.py) - hm.vy)*k;
+    hm.px = mouse.x; hm.py = mouse.y;
+  } else {
+    // two slow, unrelated sine paths make a drift that never quite repeats
+    mx = HW*(.5 + .38*Math.sin(t*.37) + .08*Math.sin(t*1.13 + 2)); my = HH*(.5 + .36*Math.sin(t*.29 + 1.4) + .07*Math.cos(t*.91));
+    if (wand.px < -999){ wand.px = mx; wand.py = my; }
+    wand.vx += ((mx - wand.px) - wand.vx)*k; wand.vy += ((my - wand.py) - wand.vy)*k; wand.px = mx; wand.py = my;
+    hm.vx = wand.vx*1.6; hm.vy = wand.vy*1.6;
   }
-  nodes.forEach(n => {
-    if (n.g < .01) return;
-    const rr = n.r + n.g * 1.6;
-    nctx.fillStyle = `rgba(22,18,31,${(.5 * n.g).toFixed(3)})`; nctx.beginPath(); nctx.arc(n.px, n.py, rr, 0, Math.PI * 2); nctx.fill();
-    nctx.fillStyle = `rgba(119,15,255,${(n.g * n.g).toFixed(3)})`; nctx.beginPath(); nctx.arc(n.px, n.py, rr, 0, Math.PI * 2); nctx.fill();
-  });
+  const sp = Math.min(Math.hypot(hm.vx, hm.vy), 60);
+  const push = reduced ? 0 : 2.6, carry = reduced ? 0 : .5;
+  const spring = 1 - Math.pow(.02, dt);
+  const D = dots, n = D.n;
+  dctx.setTransform(DPR,0,0,DPR,0,0);
+  dctx.clearRect(0,0,HW,HH);
+  dctx.fillStyle = 'rgba(22,18,31,.2)';
+  dctx.beginPath();
+  for (let i=0;i<n;i++){
+    const px = D.x[i] + D.ox[i], py = D.y[i] + D.oy[i];
+    const dx = px - mx, dy = py - my, d2 = dx*dx + dy*dy;
+    if (d2 < R2){
+      const d = Math.sqrt(d2) + .001, f = 1 - d/R, f2 = f*f;
+      D.vx[i] += (dx/d)*f2*push*(1 + sp*.04) + hm.vx*f*carry;
+      D.vy[i] += (dy/d)*f2*push*(1 + sp*.04) + hm.vy*f*carry;
+      // a little swirl around the cursor, the way stirred water curls
+      D.vx[i] += -dy/d*f2*sp*.03; D.vy[i] += dx/d*f2*sp*.03;
+    }
+    D.vx[i] += -D.ox[i]*spring*6; D.vy[i] += -D.oy[i]*spring*6;
+    D.vx[i] *= .86; D.vy[i] *= .86;
+    D.ox[i] += D.vx[i]*dt*8; D.oy[i] += D.vy[i]*dt*8;
+    const en = Math.min(1, Math.hypot(D.ox[i], D.oy[i])/22);
+    D.e[i] = en;
+    const wave = .9 + .25*Math.sin(t*1.1 + D.x[i]*.011 + D.y[i]*.013);
+    if (en < .08){ dctx.moveTo(px + wave, py); dctx.arc(px, py, wave, 0, 6.2832); }
+  }
+  dctx.fill();
+  // energised dots: larger and tinted purple
+  for (let i=0;i<n;i++){
+    const en = D.e[i]; if (en < .08) continue;
+    const px = D.x[i] + D.ox[i], py = D.y[i] + D.oy[i];
+    dctx.fillStyle = `rgba(${Math.round(lerp(22,119,en))},${Math.round(lerp(18,15,en))},${Math.round(lerp(31,255,en))},${(.25 + en*.6).toFixed(3)})`;
+    dctx.beginPath(); dctx.arc(px, py, 1 + en*2.4, 0, 6.2832); dctx.fill();
+  }
 }
-netSize(); addEventListener('resize', netSize);
+initDots(); addEventListener('resize', initDots);
 
 /* ===== Logos ===== */
 const SRC_W = 511, SRC_H = 250, PAD = 3;
